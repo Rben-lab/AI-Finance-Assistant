@@ -1,6 +1,8 @@
+# Import required libraries
 import streamlit as st
 import pandas as pd
 
+# Import custom modules
 from modules.budget import calculate_budget
 from modules.ai_advisor import generate_budget_advice
 from modules.analysis import analyze_expenses
@@ -8,25 +10,16 @@ from modules.chatbot import financial_chatbot
 from modules.insight import generate_smart_insights
 from modules.report import generate_financial_report
 
-# =========================================
-# PAGE CONFIG
-# =========================================
-
+# Configure Streamlit page settings
 st.set_page_config(
     page_title="AI Finance Assistant",
     layout="wide"
 )
 
-# =========================================
-# TITLE
-# =========================================
-
+# Main application title
 st.title("💰 AI-Powered Personal Finance Assistant")
 
-# =========================================
-# INCOME INPUT
-# =========================================
-
+# User monthly income input
 st.header("Monthly Income")
 
 income = st.number_input(
@@ -36,10 +29,7 @@ income = st.number_input(
     key="income_input"
 )
 
-# =========================================
-# FINANCIAL PROFILE
-# =========================================
-
+# Financial profile selection
 profile = st.selectbox(
     "Choose Financial Profile",
     [
@@ -50,16 +40,10 @@ profile = st.selectbox(
     key="profile_select"
 )
 
-# =========================================
-# MAIN APPLICATION
-# =========================================
-
+# Run application after income is entered
 if income > 0:
 
-    # =====================================
-    # BUDGET CALCULATION
-    # =====================================
-
+    # Generate recommended budget allocation
     budget = calculate_budget(
         income,
         profile
@@ -69,6 +53,7 @@ if income > 0:
 
     columns = st.columns(len(budget))
 
+    # Display budget allocation metrics
     for col, (category, amount) in zip(columns, budget.items()):
 
         with col:
@@ -80,10 +65,7 @@ if income > 0:
 
     st.divider()
 
-    # =====================================
-    # EXPENSE INPUT
-    # =====================================
-
+    # User expense inputs
     st.header("💸 Expense Input")
 
     food = st.number_input(
@@ -104,10 +86,7 @@ if income > 0:
         key="entertainment_input"
     )
 
-    # =====================================
-    # EXPENSE CALCULATION
-    # =====================================
-
+    # Calculate expenses and remaining balance
     total_expense = (
         food +
         transport +
@@ -116,12 +95,9 @@ if income > 0:
 
     remaining = income - total_expense
 
-    # =====================================
-    # FINANCIAL SUMMARY
-    # =====================================
-
     st.divider()
 
+    # Financial summary section
     st.header("📈 Financial Summary")
 
     col1, col2 = st.columns(2)
@@ -140,10 +116,7 @@ if income > 0:
             f"Rp {remaining:,.0f}"
         )
 
-    # =====================================
-    # FINANCIAL HEALTH SCORE
-    # =====================================
-
+    # Generate simple financial health score
     if total_expense <= income * 0.5:
 
         score = 90
@@ -163,10 +136,7 @@ if income > 0:
 
     st.divider()
 
-    # =====================================
-    # SMART FINANCIAL INSIGHTS
-    # =====================================
-
+    # Generate smart financial insights
     st.header("🧠 Smart Financial Insights")
 
     insights = generate_smart_insights(
@@ -176,16 +146,14 @@ if income > 0:
         profile
     )
 
+    # Display AI-generated insights
     for insight in insights:
 
         st.write(insight)
 
     st.divider()
 
-    # =====================================
-    # EXPENSE DATAFRAME
-    # =====================================
-
+    # Create expense dataframe
     expense_data = pd.DataFrame({
 
         "Category": [
@@ -201,20 +169,14 @@ if income > 0:
         ]
     })
 
-    # =====================================
-    # BAR CHART
-    # =====================================
-
+    # Visualize expenses using bar chart
     st.header("📊 Expense Visualization")
 
     st.bar_chart(
         expense_data.set_index("Category")
     )
 
-    # =====================================
-    # WARNING / SUCCESS MESSAGE
-    # =====================================
-
+    # Display spending warning or success message
     if total_expense > budget["Kebutuhan Pokok"]:
 
         st.warning(
@@ -229,10 +191,7 @@ if income > 0:
 
     st.divider()
 
-    # =====================================
-    # AI FINANCIAL ADVISOR
-    # =====================================
-
+    # AI-generated financial recommendation
     st.header("🤖 AI Financial Advisor")
 
     if st.button(
@@ -250,10 +209,7 @@ if income > 0:
 
     st.divider()
 
-    # =====================================
-    # FINANCIAL REPORT GENERATOR
-    # =====================================
-
+    # Generate downloadable financial report
     st.header("📄 Financial Report")
 
     report = generate_financial_report(
@@ -270,6 +226,7 @@ if income > 0:
         height=350
     )
 
+    # Download report as text file
     st.download_button(
         label="📥 Download Financial Report",
         data=report,
@@ -279,10 +236,7 @@ if income > 0:
 
     st.divider()
 
-    # =====================================
-    # CSV UPLOAD SECTION
-    # =====================================
-
+    # CSV upload section
     st.header("📂 Upload Transaction CSV")
 
     uploaded_file = st.file_uploader(
@@ -290,10 +244,7 @@ if income > 0:
         type=["csv"]
     )
 
-    # =====================================
-    # CSV ANALYSIS
-    # =====================================
-
+    # Process uploaded CSV file
     if uploaded_file is not None:
 
         df = pd.read_csv(uploaded_file)
@@ -302,10 +253,7 @@ if income > 0:
 
         st.dataframe(df)
 
-        # =================================
-        # ANALYSIS
-        # =================================
-
+        # Analyze uploaded transaction data
         analysis = analyze_expenses(df)
 
         st.divider()
@@ -338,12 +286,9 @@ if income > 0:
                 f"Rp {analysis['average_expense']:,.0f}"
             )
 
-        # =================================
-        # CSV BAR CHART
-        # =================================
-
         st.divider()
 
+        # CSV expense visualization
         st.subheader("📈 CSV Expense Visualization")
 
         csv_chart = df.groupby(
@@ -352,10 +297,7 @@ if income > 0:
 
         st.bar_chart(csv_chart)
 
-        # =================================
-        # AI CSV INSIGHT
-        # =================================
-
+        # Generate AI analysis from CSV data
         if st.button(
             "Generate AI CSV Analysis",
             key="csv_ai_button"
@@ -373,49 +315,39 @@ if income > 0:
 
     st.divider()
 
-    # =====================================
-    # AI FINANCIAL CHATBOT
-    # =====================================
-
+    # AI financial chatbot section
     st.header("💬 AI Financial Chatbot")
 
-    # SESSION STATE
-
+    # Store chat history using session state
     if "chat_history" not in st.session_state:
 
         st.session_state.chat_history = []
 
-    # CHAT INPUT
-
+    # Chat input field
     user_question = st.chat_input(
         "Ask your financial question..."
     )
 
-    # PROCESS CHAT
-
+    # Process user question
     if user_question:
 
-        # SAVE USER MESSAGE
-
+        # Save user message
         st.session_state.chat_history.append(
             ("You", user_question)
         )
 
-        # GENERATE AI RESPONSE
-
+        # Generate chatbot response
         bot_response = financial_chatbot(
             user_question,
             profile
         )
 
-        # SAVE AI RESPONSE
-
+        # Save AI response
         st.session_state.chat_history.append(
             ("AI", bot_response)
         )
 
-    # DISPLAY CHAT HISTORY
-
+    # Display conversation history
     for sender, message in st.session_state.chat_history:
 
         if sender == "You":
