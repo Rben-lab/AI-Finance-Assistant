@@ -1,3 +1,4 @@
+# Generate downloadable financial report
 def generate_financial_report(
     income,
     expenses,
@@ -6,6 +7,7 @@ def generate_financial_report(
     profile
 ):
 
+    # Create initial financial report template
     report = f"""
 AI FINANCIAL REPORT
 =============================
@@ -31,10 +33,7 @@ FINANCIAL ANALYSIS
 
 """
 
-    # =====================================
-    # SCORE ANALYSIS
-    # =====================================
-
+    # Analyze financial condition based on score
     if score >= 80:
 
         report += """
@@ -59,10 +58,7 @@ Your spending level is relatively high.
 Focus on reducing unnecessary expenses.
 """
 
-    # =====================================
-    # PROFILE RECOMMENDATION
-    # =====================================
-
+    # Generate recommendation based on financial profile
     report += "\n\n=============================\n"
     report += "PROFILE RECOMMENDATION\n"
     report += "=============================\n"
@@ -88,4 +84,5 @@ Prioritize financial stability,
 cash reserves, and lower-risk planning.
 """
 
+    # Return final report result
     return report
