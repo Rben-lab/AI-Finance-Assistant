@@ -1,3 +1,4 @@
+# Generate smart financial insights
 def generate_smart_insights(
     income,
     expenses,
@@ -5,16 +6,15 @@ def generate_smart_insights(
     profile
 ):
 
+    # Store generated insights
     insights = []
 
-    # =====================================
-    # SAVINGS CHECK
-    # =====================================
-
+    # Calculate savings percentage
     savings_rate = (
         remaining / income
     ) * 100
 
+    # Analyze savings condition
     if savings_rate >= 30:
 
         insights.append(
@@ -33,14 +33,12 @@ def generate_smart_insights(
             "🚨 Very low savings rate."
         )
 
-    # =====================================
-    # EXPENSE CHECK
-    # =====================================
-
+    # Calculate expense ratio
     expense_ratio = (
         expenses / income
     ) * 100
 
+    # Analyze spending condition
     if expense_ratio > 80:
 
         insights.append(
@@ -59,10 +57,7 @@ def generate_smart_insights(
             "✅ Your spending is under control."
         )
 
-    # =====================================
-    # PROFILE INSIGHT
-    # =====================================
-
+    # Generate recommendation based on profile type
     if profile == "Student Investor":
 
         insights.append(
@@ -81,4 +76,5 @@ def generate_smart_insights(
             "🛡️ Conservative profile detected. Prioritize financial safety."
         )
 
+    # Return all generated insights
     return insights
